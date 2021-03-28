@@ -1,6 +1,7 @@
 from bs4 import BeautifulSoup
 import requests
 import time
+import re
 
 
 BASE_URL = "https://www.dpreview.com/products/"
@@ -88,6 +89,30 @@ def get_review(camera_url):
     # Parseo de HTML utilizando beautifulsoup
 
     return review
+
+
+def get_user_review(camera_url):
+    # Pablo
+    # https://www.dpreview.com/products/sony/compacts/sony_dscrx100m7/user-reviews
+    user_review = {}
+
+    url = camera_url+"/user-reviews"
+    print("Obteniendo reviews de usuario.."+url)
+    page = s.get(url)
+    if page.status_code == 200:
+        # Parseo de HTML utilizando beautifulsoup
+        soup = BeautifulSoup(page.content, 'html.parser')
+        review_tag = soup.find(
+            'div', attrs={'class': 'starsForeground'}).get('style')
+
+        # Extraemos cifra mediante expresión regular:
+        # Ejemplo: width: 85.00000%;
+        user_review['review_score'] = re.search(
+            'width: (\d.+)\%\;', review_tag).group(1)
+        user_review['review_count'] = soup.find(
+            'div', attrs={'class': 'reviewCount'}).get_text()
+
+    return user_review
 
 
 def save_data(camera_data, output_file):
