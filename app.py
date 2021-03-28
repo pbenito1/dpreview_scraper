@@ -1,10 +1,13 @@
 from bs4 import BeautifulSoup
 import requests
+import pandas as pd
 import time
 import re
+import csv
 
 
 BASE_URL = "https://www.dpreview.com/products/"
+SLEEP_TIME = 0.5
 
 # Creamos una sesión de requests para reutilizar la conexión.
 s = requests.Session()
@@ -18,7 +21,7 @@ def get_all_cameras():
         all_cameras = all_cameras + page_res
         page = page+1
         page_res = get_camera_list(page)
-        time.sleep(1)
+        # time.sleep(SLEEP_TIME)
     return all_cameras
 
 
@@ -66,66 +69,79 @@ def get_camera_list(pagenum=1):
     return camera_list
 
 
-def get_specs(camera_url):
+def get_specs(camera):
     # camera: fujifilm/slrs/fujifilm_xs10
     # Miki
     specs = {}
     # https://www.dpreview.com/products/fujifilm/slrs/fujifilm_xs10/specifications
-    url = camera_url+"/specifications"
+    url = camera.get('link')+"/specifications"
     print("Obteniendo especificaciones..."+url)
     # page = s.get(url)
     # Parseo de HTML utilizando beautifulsoup
     return specs
 
 
-def get_review(camera_url):
+def get_review(camera):
     # camera: fujifilm/slrs/fujifilm_xs1
     # Miki
     # https://www.dpreview.com/products/fujifilm/slrs/fujifilm_xs10/review
     review = {}
-    url = camera_url+"/review"
-    print("Obteniendo reviews..."+url)
-    # page = s.get(url)
-    # Parseo de HTML utilizando beautifulsoup
+    if camera.get('review_link'):
+        url = camera.get('link')+"/review"
+        print("Obteniendo reviews..."+url)
+        # page = s.get(url)
+        # # Parseo de HTML utilizando beautifulsoup
 
     return review
 
 
-def get_user_review(camera_url):
+def get_user_review(camera):
     # Pablo
     # https://www.dpreview.com/products/sony/compacts/sony_dscrx100m7/user-reviews
     user_review = {}
 
-    url = camera_url+"/user-reviews"
+    url = camera.get('link')+"/user-reviews"
     print("Obteniendo reviews de usuario.."+url)
     page = s.get(url)
     if page.status_code == 200:
         # Parseo de HTML utilizando beautifulsoup
         soup = BeautifulSoup(page.content, 'html.parser')
-        review_tag = soup.find(
-            'div', attrs={'class': 'starsForeground'}).get('style')
-
-        # Extraemos cifra mediante expresión regular:
-        # Ejemplo: width: 85.00000%;
-        user_review['review_score'] = re.search(
-            'width: (\d.+)\%\;', review_tag).group(1)
-        user_review['review_count'] = soup.find(
-            'div', attrs={'class': 'reviewCount'}).get_text()
+        if soup.find('div', attrs={'class': 'starsForeground'}):
+            review_tag = soup.find(
+                'div', attrs={'class': 'starsForeground'}).get('style')
+            # Extraemos cifra mediante expresión regular:
+            # Ejemplo: width: 85.00000%;
+            user_review['review_score'] = re.search(
+                'width: (\d.+)\%\;', review_tag).group(1)
+            user_review['review_count'] = soup.find(
+                'div', attrs={'class': 'reviewCount'}).get_text()
 
     return user_review
 
 
-def save_data(camera_data, output_file):
+def save_data(camera_data):
     # Pablo
-    return
+    # Obtenemos todas la claves disponibles
+    keys = set().union(*(d.keys() for d in camera_data))
+    # Guardamos en formato CSV
+    with open('dpreview.csv', 'w', newline='') as output_file:
+        dict_writer = csv.DictWriter(output_file, keys)
+        # Escribimos la cabecera
+        dict_writer.writeheader()
+        dict_writer.writerows(camera_data)
 
 
 def main():
     camera_list = get_all_cameras()
+    camera_list_enriched = []
     for camera in camera_list:
-        specs = get_specs(camera.get('link'))
-        if camera.get('review_link'):
-            review = get_review(camera.get('link'))
+        specs = get_specs(camera)
+        review = get_review(camera)
+        user_review = get_user_review(camera)
+        # unimos los dict de cada tipo
+        enriched_camera = {**camera, **specs, **review, **user_review}
+        camera_list_enriched.append(enriched_camera)
+    save_data(camera_list_enriched)
 
 
 if __name__ == "__main__":
