@@ -133,16 +133,16 @@ def save_data(camera_data):
 
 def main():
     # get_user_review(
-        {'link': 'https://www.dpreview.com/products/sony/compacts/sony_dscrx100m7'})
+    #    {'link': 'https://www.dpreview.com/products/sony/compacts/sony_dscrx100m7'})
     # return
-    camera_list=get_all_cameras()
-    camera_list_enriched=[]
+    camera_list = get_all_cameras()
+    camera_list_enriched = []
     for camera in camera_list:
-        specs=get_specs(camera)
-        review=get_review(camera)
-        user_review=get_user_review(camera)
+        specs = get_specs(camera)
+        review = get_review(camera)
+        user_review = get_user_review(camera)
         # unimos los dict de cada tipo
-        enriched_camera={**camera, **specs, **review, **user_review}
+        enriched_camera = {**camera, **specs, **review, **user_review}
         camera_list_enriched.append(enriched_camera)
     save_data(camera_list_enriched)
 
