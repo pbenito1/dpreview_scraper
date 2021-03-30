@@ -13,11 +13,11 @@ SLEEP_TIME = 0.5
 s = requests.Session()
 
 
-def get_all_cameras(init_page=1):
+def get_all_cameras(init_page=1, end_page=100):
     page = init_page
     all_cameras = []
     page_res = get_camera_list(page)
-    while page_res:
+    while page_res and page < end_page:
         all_cameras = all_cameras + page_res
         page = page+1
         page_res = get_camera_list(page)
@@ -78,7 +78,7 @@ def get_specs(camera):
     print("Obteniendo especificaciones..."+url)
     page = s.get(url)
     if page.status_code == 200:
-        soup = BeautifulSoup(page.content, 'html.poars')
+        soup = BeautifulSoup(page.content, 'html.parser')
     return specs
 
 
@@ -92,14 +92,16 @@ def get_review(camera):
     url = camera.get('link')+"/review"
     print("Obteniendo reviews..."+url)
     page = s.get(url)
-    soup = BeautifulSoup(page.content, 'html.poars')
-    if soup.find('div', attrs={'class': 'scoring'}):    
+    soup = BeautifulSoup(page.content, 'html.parser')
+    if soup.find('div', attrs={'class': 'scoring'}):
         if soup.find('div', attrs={'class': 'scoring'}):
             scoring_tag = soup.find('div', attrs={'class': 'scoring'})
-            for items in scoring_tag.find_all(class_= "label"):
-                headers.append(items.find_next_sibling().text)
-            for items in scoring_tag.find_all(class_= "gauge"):
-                scores.append(re.search('width: (\d.+)\%\;', items.find_next_sibling().text))
+            for label in scoring_tag.find_all(class_="label"):
+                headers.append(label.text)
+                # headers.append(items.find_next_sibling().text)
+            for score in scoring_tag.find_all(class_="gauge"):
+                scores.append(re.search('width: (\d.+)\%\;',
+                              score.get('style')).group(1))
         review = dict(zip(headers, scores))
     return review
 
@@ -108,7 +110,6 @@ def get_user_review(camera):
     # Pablo
     # https://www.dpreview.com/prodsucts/sony/compacts/sony_dscrx100m7/user-reviews
     user_review = {}
-
     url = camera.get('link')+"/user-reviews"
     print("Obteniendo reviews de usuario.."+url)
     page = s.get(url)
@@ -141,10 +142,11 @@ def save_data(camera_data):
 
 
 def main():
-    # get_user_review(
-    #    {'link': 'https://www.dpreview.com/products/sony/compacts/sony_dscrx100m7'})
+    # get_review(
+    #    {'link': 'https://www.dpreview.com/products/fujifilm/slrs/fujifilm_xs10'})
     # return
-    camera_list = get_all_cameras()
+    camera_list = get_all_cameras(init_page=1, end_page=3)
+    # camera_list=get_all_cameras()
     camera_list_enriched = []
     for camera in camera_list:
         specs = get_specs(camera)
