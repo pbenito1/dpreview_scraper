@@ -76,8 +76,9 @@ def get_specs(camera):
     # https://www.dpreview.com/products/fujifilm/slrs/fujifilm_xs10/specifications
     url = camera.get('link')+"/specifications"
     print("Obteniendo especificaciones..."+url)
-    # page = s.get(url)
-    # Parseo de HTML utilizando beautifulsoup
+    page = s.get(url)
+    if page.status_code == 200:
+        soup = BeautifulSoup(page.content, 'html.poars')
     return specs
 
 
