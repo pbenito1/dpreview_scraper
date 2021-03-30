@@ -87,12 +87,20 @@ def get_review(camera):
     # Miki
     # https://www.dpreview.com/products/fujifilm/slrs/fujifilm_xs10/review
     review = {}
-    if camera.get('review_link'):
-        url = camera.get('link')+"/review"
-        print("Obteniendo reviews..."+url)
-        # page = s.get(url)
-        # # Parseo de HTML utilizando beautifulsoup
-
+    headers = []
+    scores = []
+    url = camera.get('link')+"/review"
+    print("Obteniendo reviews..."+url)
+    page = s.get(url)
+    soup = BeautifulSoup(page.content, 'html.poars')
+    if soup.find('div', attrs={'class': 'scoring'}):    
+        if soup.find('div', attrs={'class': 'scoring'}):
+            scoring_tag = soup.find('div', attrs={'class': 'scoring'})
+            for items in scoring_tag.find_all(class_= "label"):
+                headers.append(items.find_next_sibling().text)
+            for items in scoring_tag.find_all(class_= "gauge"):
+                scores.append(re.search('width: (\d.+)\%\;', items.find_next_sibling().text))
+        review = dict(zip(headers, scores))
     return review
 
 
