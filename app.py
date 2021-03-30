@@ -13,8 +13,8 @@ SLEEP_TIME = 0.5
 s = requests.Session()
 
 
-def get_all_cameras():
-    page = 1
+def get_all_cameras(init_page=1):
+    page = init_page
     all_cameras = []
     page_res = get_camera_list(page)
     while page_res:
@@ -97,7 +97,7 @@ def get_review(camera):
 
 def get_user_review(camera):
     # Pablo
-    # https://www.dpreview.com/products/sony/compacts/sony_dscrx100m7/user-reviews
+    # https://www.dpreview.com/prodsucts/sony/compacts/sony_dscrx100m7/user-reviews
     user_review = {}
 
     url = camera.get('link')+"/user-reviews"
@@ -106,9 +106,9 @@ def get_user_review(camera):
     if page.status_code == 200:
         # Parseo de HTML utilizando beautifulsoup
         soup = BeautifulSoup(page.content, 'html.parser')
-        if soup.find('div', attrs={'class': 'starsForeground'}):
+        if soup.find('div', attrs={'class': 'starsForeground large'}):
             review_tag = soup.find(
-                'div', attrs={'class': 'starsForeground'}).get('style')
+                'div', attrs={'class': 'starsForeground large'}).get('style')
             # Extraemos cifra mediante expresión regular:
             # Ejemplo: width: 85.00000%;
             user_review['review_score'] = re.search(
@@ -132,14 +132,17 @@ def save_data(camera_data):
 
 
 def main():
-    camera_list = get_all_cameras()
-    camera_list_enriched = []
+    # get_user_review(
+        {'link': 'https://www.dpreview.com/products/sony/compacts/sony_dscrx100m7'})
+    # return
+    camera_list=get_all_cameras()
+    camera_list_enriched=[]
     for camera in camera_list:
-        specs = get_specs(camera)
-        review = get_review(camera)
-        user_review = get_user_review(camera)
+        specs=get_specs(camera)
+        review=get_review(camera)
+        user_review=get_user_review(camera)
         # unimos los dict de cada tipo
-        enriched_camera = {**camera, **specs, **review, **user_review}
+        enriched_camera={**camera, **specs, **review, **user_review}
         camera_list_enriched.append(enriched_camera)
     save_data(camera_list_enriched)
 
