@@ -21,7 +21,7 @@ def get_all_cameras(init_page=1, end_page=100):
         all_cameras = all_cameras + page_res
         page = page+1
         page_res = get_camera_list(page)
-        # time.sleep(SLEEP_TIME)
+        time.sleep(SLEEP_TIME)
     return all_cameras
 
 
@@ -69,41 +69,60 @@ def get_camera_list(pagenum=1):
     return camera_list
 
 
+def get_overview(camera):
+    # https://www.dpreview.com/products/leica/compacts/leica_q2_monochrom/overview
+    overview = {}
+    labels = []
+    scores = []
+    url = camera.get('link')+"/overview"
+    print("Obteniendo overview..."+url)
+    page = s.get(url)
+    if page.status_code == 200:
+        soup = BeautifulSoup(page.content, 'html.parser')
+        if soup.find('div', attrs={'class': 'scoring'}):
+            scoring_tag = soup.find('div', attrs={'class': 'scoring'})
+            for label in scoring_tag.find_all(class_="label"):
+                labels.append(label.text)
+                # headers.append(items.find_next_sibling().text)
+            for score in scoring_tag.find_all(class_="gauge"):
+                scores.append(float(re.search('width: (\d.+)\%\;',
+                              score.get('style')).group(1)))
+        overview = dict(zip(labels, scores))
+        breadcrumbs = soup.find(
+            'div', attrs={'class': 'breadcrumbs'}).find_all()
+        overview['brand'] = breadcrumbs[2].text.strip()
+        overview['brand_camera_family'] = breadcrumbs[4].text.strip()
+        gear_list = soup.find('table', {'id': 'productOverviewGearList'}).find(
+            'tr', {'class': 'values'}).find_all('td')
+        overview['own_gear'] = int(gear_list[0].text.strip())
+        overview['want_gear'] = int(gear_list[2].text.strip())
+        overview['had_gear'] = int(gear_list[4].text.strip())
+
+    return overview
+
+
 def get_specs(camera):
     # camera: fujifilm/slrs/fujifilm_xs10
     # Miki
     specs = {}
+    labels = []
+    values = []
     # https://www.dpreview.com/products/fujifilm/slrs/fujifilm_xs10/specifications
     url = camera.get('link')+"/specifications"
     print("Obteniendo especificaciones..."+url)
     page = s.get(url)
     if page.status_code == 200:
         soup = BeautifulSoup(page.content, 'html.parser')
-    return specs
-
-
-def get_review(camera):
-    # camera: fujifilm/slrs/fujifilm_xs1
-    # Miki
-    # https://www.dpreview.com/products/fujifilm/slrs/fujifilm_xs10/review
-    review = {}
-    headers = []
-    scores = []
-    url = camera.get('link')+"/review"
-    print("Obteniendo reviews..."+url)
-    page = s.get(url)
-    soup = BeautifulSoup(page.content, 'html.parser')
-    if soup.find('div', attrs={'class': 'scoring'}):
-        if soup.find('div', attrs={'class': 'scoring'}):
-            scoring_tag = soup.find('div', attrs={'class': 'scoring'})
-            for label in scoring_tag.find_all(class_="label"):
-                headers.append(label.text)
+        if soup.find('table', attrs={'class': 'specsTable compact'}):
+            specs_tag = soup.find(
+                'table', attrs={'class': 'specsTable compact'})
+            for label in specs_tag.find_all(class_="label"):
+                labels.append(label.text.strip())
                 # headers.append(items.find_next_sibling().text)
-            for score in scoring_tag.find_all(class_="gauge"):
-                scores.append(re.search('width: (\d.+)\%\;',
-                              score.get('style')).group(1))
-        review = dict(zip(headers, scores))
-    return review
+            for value in specs_tag.find_all(class_="value"):
+                values.append(value.text.strip())
+        specs = dict(zip(labels, values))
+    return specs
 
 
 def get_user_review(camera):
@@ -142,18 +161,18 @@ def save_data(camera_data):
 
 
 def main():
-    # get_review(
+    # get_overview(
     #    {'link': 'https://www.dpreview.com/products/fujifilm/slrs/fujifilm_xs10'})
     # return
-    camera_list = get_all_cameras(init_page=1, end_page=3)
-    # camera_list=get_all_cameras()
+    # camera_list = get_all_cameras(init_page=1, end_page=2)
+    camera_list = get_all_cameras()
     camera_list_enriched = []
     for camera in camera_list:
+        overview = get_overview(camera)
         specs = get_specs(camera)
-        review = get_review(camera)
         user_review = get_user_review(camera)
         # unimos los dict de cada tipo
-        enriched_camera = {**camera, **specs, **review, **user_review}
+        enriched_camera = {**camera, **overview, **specs, **user_review}
         camera_list_enriched.append(enriched_camera)
     save_data(camera_list_enriched)
 
