@@ -36,7 +36,7 @@ def get_page_check_robots(url):
         return
 
 
-def get_all_cameras(init_page=1, end_page=2):
+def get_all_cameras(init_page=1, end_page=100):
     page = init_page
     all_cameras = []
     page_res = get_camera_list(page)
@@ -49,7 +49,6 @@ def get_all_cameras(init_page=1, end_page=2):
 
 
 def get_camera_list(pagenum=1):
-    # Pablo
     # https://www.dpreview.com/products/cameras/all?view=list
     # https://www.dpreview.com/products/cameras/all?view=list&page=2
 
@@ -128,7 +127,6 @@ def get_overview(camera):
 
 def get_specs(camera):
     # camera: fujifilm/slrs/fujifilm_xs10
-    # Miki
     specs = {}
     labels = []
     values = []
@@ -151,7 +149,6 @@ def get_specs(camera):
 
 
 def get_user_review(camera):
-    # Pablo
     # https://www.dpreview.com/prodsucts/sony/compacts/sony_dscrx100m7/user-reviews
     user_review = {}
     url = camera.get('link')+"/user-reviews"
@@ -174,7 +171,6 @@ def get_user_review(camera):
 
 
 def save_data(camera_data):
-    # Pablo
     # Obtenemos todas la claves disponibles
     keys = set().union(*(d.keys() for d in camera_data))
     # Guardamos en formato CSV
