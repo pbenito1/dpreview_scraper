@@ -3,16 +3,40 @@ import requests
 import time
 import re
 import csv
+import random
+from urllib import parse
+from urllib import robotparser
 
+user_agent_list = [
+    'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_5) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.1.1 Safari/605.1.15',
+    'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:77.0) Gecko/20100101 Firefox/77.0',
+    'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.97 Safari/537.36',
+    'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:77.0) Gecko/20100101 Firefox/77.0',
+    'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.97 Safari/537.36',
+]
 
 BASE_URL = "https://www.dpreview.com/products/"
 SLEEP_TIME = 0.5
+
+robots_txt = robotparser.RobotFileParser()
+robots_txt.set_url('https://www.dpreview.com/robots.txt')
+robots_txt.read()
 
 # Creamos una sesión de requests para reutilizar la conexión.
 s = requests.Session()
 
 
-def get_all_cameras(init_page=1, end_page=100):
+def get_page_check_robots(url):
+    user_agent = random.choice(user_agent_list)
+    if robots_txt.can_fetch(user_agent, url):
+        return s.get(url,
+                     headers={'User-Agent': user_agent})
+    else:
+        print("Url no permitida: "+url)
+        return
+
+
+def get_all_cameras(init_page=1, end_page=2):
     page = init_page
     all_cameras = []
     page_res = get_camera_list(page)
@@ -30,7 +54,9 @@ def get_camera_list(pagenum=1):
     # https://www.dpreview.com/products/cameras/all?view=list&page=2
 
     camera_list = []
-    page = s.get(BASE_URL+"/cameras/all?view=list&page="+str(pagenum))
+    page = get_page_check_robots(
+        BASE_URL+"/cameras/all?view=list&page="+str(pagenum))
+
     print("Procesando "+BASE_URL+"/cameras/all?view=list&page="+str(pagenum))
     soup = BeautifulSoup(page.content, 'html.parser')
     # print(soup.prettify())
@@ -75,7 +101,7 @@ def get_overview(camera):
     scores = []
     url = camera.get('link')+"/overview"
     print("Obteniendo overview..."+url)
-    page = s.get(url)
+    page = get_page_check_robots(url)
     if page.status_code == 200:
         soup = BeautifulSoup(page.content, 'html.parser')
         if soup.find('div', attrs={'class': 'scoring'}):
@@ -109,7 +135,7 @@ def get_specs(camera):
     # https://www.dpreview.com/products/fujifilm/slrs/fujifilm_xs10/specifications
     url = camera.get('link')+"/specifications"
     print("Obteniendo especificaciones..."+url)
-    page = s.get(url)
+    page = get_page_check_robots(url)
     if page.status_code == 200:
         soup = BeautifulSoup(page.content, 'html.parser')
         if soup.find('table', attrs={'class': 'specsTable compact'}):
@@ -130,7 +156,7 @@ def get_user_review(camera):
     user_review = {}
     url = camera.get('link')+"/user-reviews"
     print("Obteniendo reviews de usuario.."+url)
-    page = s.get(url)
+    page = get_page_check_robots(url)
     if page.status_code == 200:
         # Parseo de HTML utilizando beautifulsoup
         soup = BeautifulSoup(page.content, 'html.parser')
@@ -160,16 +186,16 @@ def save_data(camera_data):
 
 
 def main():
-    # get_overview(
-    #    {'link': 'https://www.dpreview.com/products/fujifilm/slrs/fujifilm_xs10'})
-    # return
-    # camera_list = get_all_cameras(init_page=1, end_page=2)
     camera_list = get_all_cameras()
     camera_list_enriched = []
     for camera in camera_list:
         overview = get_overview(camera)
+        time.sleep(SLEEP_TIME)
         specs = get_specs(camera)
+        time.sleep(SLEEP_TIME)
         user_review = get_user_review(camera)
+        time.sleep(SLEEP_TIME)
+
         # unimos los dict de cada tipo
         enriched_camera = {**camera, **overview, **specs, **user_review}
         camera_list_enriched.append(enriched_camera)
