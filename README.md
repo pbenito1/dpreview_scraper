@@ -9,7 +9,7 @@ Práctica 1 de la asignatura *"Tipología y ciclo de vida de los datos"* del [M�
 * Miquel Rived 
 
 # Contexto
-Esta práctica se ha realizado bajo el contexto de la asignatura Tipología y ciclo de vida de los datos, perteneciente al Máster en Ciencia de Datos de la Universitat Oberta de Catalunya. En ella, se aplican técnicas de web scraping mediante el lenguaje de programación Python para extraer así datos de la web [dpreview.com] y generar un dataset.
+Esta práctica se ha realizado bajo el contexto de la asignatura Tipología y ciclo de vida de los datos, perteneciente al Máster en Ciencia de Datos de la Universitat Oberta de Catalunya. En ella, se aplican técnicas de web scraping mediante el lenguaje de programación Python para extraer así datos de la web dpreview.com y generar un dataset.
 
 Digital Photography Review (dpreview.com) es un sitio web sobre cámaras digitales y fotografía digital en el que se pueden encontrar análisis de cámaras digitales, guías de compra, opiniones de usuarios y foros muy activos. Es uno de los 1.500 sitios web más visitados en Internet, además de ser actualmente el sitio de fotografía difital con mayor audiencia. 
 
@@ -27,6 +27,7 @@ El dataset contiene tanto características de las propias cámaras, como de valo
 
 TODO: Presentar esquema o diagrama que identifique el dataset visualmente y el proyecto elegido
 
+![alt text](representation.png "Representación gráfica del dataset")
 # Contenido
 
 Se podrían separar los campos extraídos en dos áreas, la primera correspondiente a las características de la cámara y la segunda referente a las valoraciones.
@@ -43,7 +44,7 @@ Lleva activo desde 1999 y cuenta con una gran comunidad de usuarios muy activos,
 
 En el análisis hecho por [fongfan999](https://github.com/fongfan999/dpreview_analyzer) se estudiaron las reseñas en Amazon desde Dpreview.com.
 
-Por otro lado, en el análisis  realizado por [nmounika] (https://github.com/nmounika/dpreview_webscrape/blob/master/camera%20webscrape%20dpreview.py) se analizaron las especificaciones de distintas cámaras.
+Por otro lado, en el análisis  realizado por [nmounika](https://github.com/nmounika/dpreview_webscrape/blob/master/camera%20webscrape%20dpreview.py) se analizaron las especificaciones de distintas cámaras.
 
 # Inspiración
 
@@ -79,4 +80,6 @@ El script se puede consultar
 # Dataset
 El dataset se encuentra publicado en Zenodo en el siguiente repositorio: https://zenodo.org/record/4660007
 
+A continuación se muestra una captura del registro del dataset en Zenodo:
+![alt text](zenodo.png "Dataset en Zenodo")
 # 
