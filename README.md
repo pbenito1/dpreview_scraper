@@ -30,11 +30,16 @@ Presentar esquema o diagrama que identifique el dataset visualmente y el proyect
 ![alt text](representation.png "Representación gráfica del dataset")
 # Contenido
 
-Se podrían separar los campos extraídos en dos áreas, la primera correspondiente a las características de la cámara y la segunda referente a las valoraciones.
+Se podrían separar los campos extraídos en cuatro áreas, la primera (list) con breves características de la cámara, la segunda (overview) en la que se profundiza en la valoración dada por los expertos y se extraen otras características como la marca, la tercera (specifications) en la que se extraen la mayor cantidad de especificaciones de la cámara, y la última (user-review) de la que se extraen las valoraciones otorgadas por los usuarios.
 
-En cuanto a las características de las cámaras se ha extraído una gran cantidad de campos, destacando el nombre de la cámara, la marca, el precio, los píxeles del sensor, la máxima resolución o el tamaño de la pantalla.
+Referente a lo que se extrae de la pantalla list, extraemos el nombre y una imagen de la cámara, la fecha del anuncio, especificaciones rápidas, el link de las reviews, así como el valor de las valoraciones de los especialistas. 
 
-Por lo que a la valoración de los expertos se refiere, se ha recogido una valoración del 0 al 100 referente a la calidad de construcción, ergonomía y manejo, características, precisión de medición y enfoque, calidad de imagen (raw), calidad de imagen (jpeg), rendimiento con poca luz, valoración del visor, modo de vídeo, conectividad y el valor, además de la media de la valoración de los usuarios.
+En la pantalla overview se extrae la marca de la cámara y su familia, las personas que la tienen, la han tenido o la querrían tener, además una valoración del 0 al 100 referente a los siguientes aspectos: calidad de construcción, ergonomía y manejo, características, precisión de medición y enfoque, calidad de imagen (raw), calidad de imagen (jpeg), rendimiento con poca luz, valoración del visor, modo de vídeo, conectividad y el valor, además de la media de la valoración de los usuarios.
+
+En cuanto a las características de las cámaras se ha extraído una gran cantidad de campos, destacando el precio, los píxeles del sensor, la máxima resolución, el tamaño de la pantalla, el tipo de cuerpo o el MSPR entre muchos otros.
+
+Por lo que se refiere a la pantalla de user-reviews, se ha extraído información de la valoración media de los usuarios y cuantas valoraciones se han hecho en cada cámara.
+
 
 # Agradecimientos
 
