@@ -45,11 +45,13 @@ Por lo que se refiere a la pantalla de user-reviews, se ha extraído informació
 
 **dpreview.com** es el sitio web de referencia en lo que a cámaras fotográficas digitales se refiere.
 
-Lleva activo desde 1999 y cuenta con una gran comunidad de usuarios muy activos, sus reviews destacan por su calidad, incorporando muestras fotográficas de un gran número de cámaras digitales.
+Lleva activo desde 1999 y cuenta con una gran comunidad de usuarios muy activos, sus reviews destacan por su calidad, incorporando muestras fotográficas de un gran número de cámaras digitales. Además, dpreview pertenece al grupo IMDB, famoso por su base de datos de valoraciones de películas y actores.
 
 En el análisis hecho por [fongfan999](https://github.com/fongfan999/dpreview_analyzer) se estudiaron las reseñas en Amazon desde Dpreview.com.
 
 Por otro lado, en el análisis  realizado por [nmounika](https://github.com/nmounika/dpreview_webscrape/blob/master/camera%20webscrape%20dpreview.py) se analizaron las especificaciones de distintas cámaras.
+
+
 
 # Inspiración
 
@@ -58,6 +60,13 @@ Lo más interesante del conjunto de datos extraído es la gran cantidad de espec
 En primer lugar se quiere ver que especificaciones afectan más en el aumento de precio de una cámara digital.
 
 Por otro lado, se quiere ver que cámaras son las más valoradas por los usuarios o los expertos, por lo que se pretenderá analizar las marcas más valoradas, si el precio influye en la valoración final, o que tipo de especificaciones son las que buscan los usuarios en una cámara digital para realizar una valoración alta.
+
+Además de lo comentado con anterioridad, se pretenden responder preguntas como las siguientes:
+
+- ¿Cuál es la cámara mejor valorada por los usuarios?
+- ¿Cuál es la cámara más cara y más ergónomica?
+- ¿Qué cámara es capaz de disparar más fotografías en modo ráfaga?
+- ¿Cuál es la cámara con GPS más ligera y mayor autonomía de batería?
 
 # Licencia
 TODO: Seleccione una de estas licencias para su dataset y explique el motivo
