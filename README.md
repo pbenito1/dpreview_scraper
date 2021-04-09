@@ -68,6 +68,10 @@ Además de lo comentado con anterioridad, se pretenden responder preguntas como 
 - ¿Qué cámara es capaz de disparar más fotografías en modo ráfaga?
 - ¿Cuál es la cámara con GPS más ligera y mayor autonomía de batería?
 
+Estas preguntas pueden variar a lo largo de las prácticas, ya que disponemos de una gran variedad de cámaras y campos para analizarlas que seguro que al visualizar con mayor detenimiento nos hacen hacernos nuevas preguntas.
+
+La diferencia principal con los otros estudios encontrados de dpreview.com es la gran variedad de campos que hemos seleccionado para analizar las cámaras.
+
 # Licencia
 TODO: Seleccione una de estas licencias para su dataset y explique el motivo
 de su selección:
