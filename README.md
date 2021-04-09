@@ -93,7 +93,7 @@ El *script* sigue las mejores prácticas recomendadas:
 - Realiza una pausa de 500ms entre peticiones para evitar saturar con nuestras peticiones al servidor web.
 
 
-El *script* se puede consultar [aquí](app.py)
+El *script* se puede consultar [aquí](code/app.py)
 
 
 # Dataset
