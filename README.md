@@ -21,7 +21,7 @@ Características y evaluación de cámaras fotográficas digitales
 # Descripción del dataset
 El `dataset` obtenido mediante el scraper contiene los datos de la base de datos de cámaras digitales recopiladas por [dpreview.com](dpreview.com).
 
-El dataset contiene tanto características de las propias cámaras, como de ls valoración otorgada por los expertos de la propia página y de los usuarios de su comunidad.
+El dataset contiene tanto características técnicas de las propias cámaras, así como la valoración otorgada por los expertos de la propia página y de los usuarios de su comunidad.
 
 # Representación gráfica
 
@@ -40,6 +40,8 @@ En cuanto a las características de las cámaras se ha extraído una gran cantid
 
 Por lo que se refiere a la pantalla de user-reviews, se ha extraído información de la valoración media de los usuarios y cuantas valoraciones se han hecho en cada cámara.
 
+El `dataset` consta en total con 125 atributos de todo tipos: numéricos, factores, texto. Dado que la información recopilada se corresponde con cámaras
+
 
 # Agradecimientos
 
@@ -47,19 +49,18 @@ Por lo que se refiere a la pantalla de user-reviews, se ha extraído informació
 
 Lleva activo desde 1999 y cuenta con una gran comunidad de usuarios muy activos, sus reviews destacan por su calidad, incorporando muestras fotográficas de un gran número de cámaras digitales. Además, dpreview pertenece al grupo IMDB, famoso por su base de datos de valoraciones de películas y actores.
 
-En el análisis hecho por [fongfan999](https://github.com/fongfan999/dpreview_analyzer) se estudiaron las reseñas en Amazon desde Dpreview.com.
+En el análisis hecho por [fongfan999](https://github.com/fongfan999/dpreview_analyzer) se estudiaron las reseñas en Amazon de las cámaras publicadas en dpreview.com.
 
-Por otro lado, en el análisis  realizado por [nmounika](https://github.com/nmounika/dpreview_webscrape/blob/master/camera%20webscrape%20dpreview.py) se analizaron las especificaciones de distintas cámaras.
-
+Por otro lado, en el análisis  realizado por [nmounika](https://github.com/nmounika/dpreview_webscrape/blob/master/camera%20webscrape%20dpreview.py) se analizaron las especificaciones de distintas cámaras. En su aproximación, busca detalles concretos (p.ej. Body type), dentro de las especificaciones. Nuestro desarrollo en ese sentido es más genérico, adaptándose tanto a las especificaciones con más antiguedad, como a las más modernas (p.ej. GPS).
 
 
 # Inspiración
 
 Lo más interesante del conjunto de datos extraído es la gran cantidad de especificaciones diferentes que se encuentran, así como el gran abanico de cámaras digitales que lo abarcan.
 
-En primer lugar se quiere ver que especificaciones afectan más en el aumento de precio de una cámara digital.
+En primer lugar se quiere analizar que características técnicas afectan más en el aumento de precio de una cámara digital.
 
-Por otro lado, se quiere ver que cámaras son las más valoradas por los usuarios o los expertos, por lo que se pretenderá analizar las marcas más valoradas, si el precio influye en la valoración final, o que tipo de especificaciones son las que buscan los usuarios en una cámara digital para realizar una valoración alta.
+Por otro lado, se tratará de determinar qué cámaras son las más valoradas por los usuarios o los expertos, por lo que se pretenderá analizar las marcas más valoradas, si el precio influye en la valoración final, o que tipo de especificaciones son las que buscan los usuarios en una cámara digital para realizar una valoración alta.
 
 Además de lo comentado con anterioridad, se pretenden responder preguntas como las siguientes:
 
@@ -73,31 +74,42 @@ Estas preguntas pueden variar a lo largo de las prácticas, ya que disponemos de
 La diferencia principal con los otros estudios encontrados de dpreview.com es la gran variedad de campos que hemos seleccionado para analizar las cámaras.
 
 # Licencia
-TODO: Seleccione una de estas licencias para su dataset y explique el motivo
-de su selección:
-- Released Under CC0: Public Domain License
-- Released Under CC BY-NC-SA 4.0 License
-- Released Under CC BY-SA 4.0 License
-- Database released under Open Database License, individual contents
-under Database Contents License
-- Other (specified above)
-- Unknown License
 
-La licencia escogida para la publicación del dataset es Released Under CC BY-SA 4.0 ya que por los motivoss que se listan a continuación relacionados con sus cláusulas se cree que es la más idónea:
+La licencia escogida para la publicación del dataset es **Released Under CC BY-SA 4.0** ya que por los siguientes motivos relacionados con sus cláusulas se considera la más idónea:
 - En primer lugar, el hecho de tener que proveer el nombre del creador del conjunto de datos junto con los cambios realizados hace que se valore el trabajo de dpreview.com a la par que se exponen las aportaciones realizadas por nosotros en la extracción.
 - Al permitirse su uso comercial hace que se puedan realizar trabajos a partir del dataset que nos reporten cierto reconocimiento.
 - Toda contribución realizada a posteriori deberá distribuirse bajo la misma licencia, por lo que todo trabajo realizado sobre el que se está haciendo deberá seguir distribuyéndose bajo los términos planteados.
+
 # Código
 
 El scraper se ha desarrollado en Python utilizando las librerías `requests` y `beautifulsoup`. 
 
-El script se puede consultar 
-[aquí](app.py)
+En el *script* en primer lugar se obtiene el listado de todas las cámaras disponibles, recorriendo todas las páginas disponibles. A continuación, a continuación se obtienen los datos de las páginas `overview`, `specifications` y `user-reviews`
+
+El *script* sigue las mejores prácticas recomendadas:
+
+- Analiza el fichero `robots.txt`, evitando realizar peticiones a aquellas URLs que el administrador del sitio web ha indicado expresamente como `Disallow`
+- Realiza las peticiones a dpreview.com utilizando el `user-agent` correspondiente a los navegadores más populares.
+- Realiza una pausa de 500ms entre peticiones para evitar saturar con nuestras peticiones al servidor web.
+
+
+El *script* se puede consultar [aquí](app.py)
 
 
 # Dataset
-El dataset se encuentra publicado en Zenodo en el siguiente repositorio: https://zenodo.org/record/4660007
+El dataset se encuentra publicado en Zenodo en el siguiente repositorio: 
+
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.4660007.svg)](https://doi.org/10.5281/zenodo.4660007)
 
 A continuación se muestra una captura del registro del dataset en Zenodo:
 ![alt text](zenodo.png "Dataset en Zenodo")
-# 
+
+# Contribuciones al proyecto
+
+La siguiente tabla resume la contribución de los autores a los diferentes apartados del proyecto:
+
+| Contribuciones              | Firma     |
+| --------------------------- | --------- |
+| Investigación previa        | PB, MR    |
+| Redacción de las respuestas | PB, MR    |
+| Desarrollo código           | PB, MR    |
