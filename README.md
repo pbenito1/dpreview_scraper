@@ -21,11 +21,11 @@ Características y evaluación de cámaras fotográficas digitales
 # Descripción del dataset
 El `dataset` obtenido mediante el scraper contiene los datos de la base de datos de cámaras digitales recopiladas por [dpreview.com](dpreview.com).
 
-El dataset contiene tanto características de las propias cámaras, como de valoración otorgada por los expertos de la propia página y de los usuarios de su comunidad.
+El dataset contiene tanto características de las propias cámaras, como de ls valoración otorgada por los expertos de la propia página y de los usuarios de su comunidad.
 
 # Representación gráfica
 
-TODO: Presentar esquema o diagrama que identifique el dataset visualmente y el proyecto elegido
+Presentar esquema o diagrama que identifique el dataset visualmente y el proyecto elegido
 
 ![alt text](representation.png "Representación gráfica del dataset")
 # Contenido
